@@ -6,7 +6,7 @@ Usage:
 """
 import unittest
 from unittest.mock import patch
-from src.chatbot import get_account,VALID_TASKS,ACCOUNTS,get_amount
+from src.chatbot import get_account,VALID_TASKS,ACCOUNTS,get_amount,get_balance
 
 class chatbotTests(unittest.TestCase):
     def test_get_account_valid(self):
@@ -89,7 +89,24 @@ class chatbotTests(unittest.TestCase):
             with self.assertRaises(Exception) as context:
                 get_amount()
             self.assertEqual(str(context.exception), expected)
-    
 
-            
+    def test_get_balance_correct_account(self):
+        #Arrange
+        account = 123456
+        expected = f'Your current balance for account 123456 is $1000.00.'
+        #Act
+        result = get_balance(account)
+        #Assert
+        self.assertEqual(result, expected)
+    
+    def test_get_balance_invalid_account(self):
+        #Arrange
+        account = 112233
+        expected = 'Account number does not exist.'
+        #Act and Assert
+        with self.assertRaises(Exception) as context:
+            get_balance(account)
+        self.assertEqual(str(context.exception), expected)
+
+        
 

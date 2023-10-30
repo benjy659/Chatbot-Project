@@ -26,9 +26,9 @@ def get_account() -> int:
     return(int): return the users_selection if it an integer.
 
     raises:
-    Exception: if Account number does not exist.
-    valueerror: if Acount number is not a whole number
-    """
+        Exception: if Account number does not exist.
+        valueerror: if Acount number is not a whole number
+        """
 
     #if  user_selction is valid.
     valid = True
@@ -42,15 +42,6 @@ def get_account() -> int:
         except ValueError:
             raise Exception('Account Number must be a whole number.')
 
-try:
-    nm = get_account()
-    print (nm)
-except ValueError as e: 
-    print(e)
-except Exception as e:
-    print(e)
-
-
 def get_amount() ->float:
     """
     args(): no parameters.
@@ -58,9 +49,9 @@ def get_amount() ->float:
     return(float): returns a user_selection if its valid.
 
     raises:
-    valueError:
-    Exception: 
-    """
+        valueError: if user_selection is not numeric. 
+        Exception: if user_selection is zero or negative number.
+        """
     while True:
         try:
             user_selection = (input('Enter transaction amount: '))
@@ -72,13 +63,22 @@ def get_amount() ->float:
             raise ValueError('invalid amount. amount must be numeric.')
 
         
+def get_balance(account: int) -> str:
+    """
+    args:
+    amount(int): the account number must be  an integer.
 
-# try:
-#     us = get_amount()
-    
-# except Exception as e:
-#     print(e)
-    
+    return(str): returns a string message that includes account number and balance.
+
+    raises:
+        Exception: 
+    """
+    if account in ACCOUNTS:
+        balance = ACCOUNTS[account]['balance']
+        return f'Your current balance for account {account} is ${balance:.2f}.'
+    else:
+        raise Exception('Account number does not exist.')
+
 
 
 
