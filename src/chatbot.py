@@ -26,23 +26,59 @@ def get_account() -> int:
     return(int): return the users_selection if it an integer.
 
     raises:
-    valueError: if user_selection is not an integer.
     Exception: if Account number does not exist.
+    valueerror: if Acount number is not a whole number
     """
 
-        #continue if  user_selction is valid.
-    user_selection = input('Please enter your account number: ')
-    try:
-        account_number = int(user_selection)
-        if account_number in ACCOUNTS:
-            return account_number
-        elif account_number not in ACCOUNTS:
-            raise Exception('Acount Number Does not Exsist.')
-    except ValueError:
-        raise ValueError('Account Number must be a whole number.')
+    #if  user_selction is valid.
+    valid = True
+    while valid:
+        try:
+            user_selection = input('Please enter your account number: ')
+            account_number = int(user_selection)
+            if account_number not in ACCOUNTS:
+                raise Exception('Acount Number Does not Exsist.')
+            return account_number #returns account number if it in ACCOUNTS.
+        except ValueError:
+            raise Exception('Account Number must be a whole number.')
+
+try:
+    nm = get_account()
+    print (nm)
+except ValueError as e: 
+    print(e)
+except Exception as e:
+    print(e)
 
 
+def get_amount() ->float:
+    """
+    args(): no parameters.
 
+    return(float): returns a user_selection if its valid.
+
+    raises:
+    valueError:
+    Exception: 
+    """
+    while True:
+        try:
+            user_selection = (input('Enter transaction amount: '))
+            amount = float(user_selection)
+            if amount <= 0:
+                raise Exception('Invalid amount. please enter a positive number.')
+            return amount
+        except ValueError:
+            raise ValueError('invalid amount. amount must be numeric.')
+
+        
+
+# try:
+#     us = get_amount()
+    
+# except Exception as e:
+#     print(e)
+    
 
 
 
