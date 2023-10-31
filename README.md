@@ -20,6 +20,7 @@ Benjamin Omoregie
 ` some benefits of unit testing are:`
 - it improves the quality of your code by  testing each block of your code to identify possible errors when developing a program. 
 - it can also sserve as a documentation, by clearly stating how the code is supposed to work.
+
 ` some challenges of using unit testing are:`
 - it is time consuming .
 - if frequently needs to be updated when ever a code outcome  is changed.
