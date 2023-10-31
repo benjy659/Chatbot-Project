@@ -1,12 +1,12 @@
 """
-Description:
-Author:
-Date:
-Usage:
+Description: For testing chatbot application.
+Author: Benjamin Omoregie
+Date: 30/10/23
+Usage: The chatbot Alows users perform balance enquire andd make deposit to thier accounts.
 """
 import unittest
 from unittest.mock import patch
-from src.chatbot import get_account,VALID_TASKS,ACCOUNTS,get_amount,get_balance
+from src.chatbot import get_account,VALID_TASKS,ACCOUNTS,get_amount,get_balance,make_deposit
 
 class chatbotTests(unittest.TestCase):
     def test_get_account_valid(self):
@@ -107,6 +107,49 @@ class chatbotTests(unittest.TestCase):
         with self.assertRaises(Exception) as context:
             get_balance(account)
         self.assertEqual(str(context.exception), expected)
+
+    def test_make_deposit_balance_updated(self):
+        #Arrange
+        account_number = 123456
+        ACCOUNTS[account_number]['balance'] = 1000.0
+        deposit_amount = 1500.01
+        expected = 1000.0 + deposit_amount
+        #Act
+        actual = make_deposit(account_number, deposit_amount)
+        #Assert
+        self.assertEqual(ACCOUNTS[account_number]['balance'], expected)
+    def test_make_deposit_correct_value_returned(self):
+        #Arrange
+        account_number = 123456
+        ACCOUNTS[account_number]['balance'] = 1000.0
+        deposit_amount = 1500.01
+        expected = 'You have made a deposit of $1500.01 to account 123456.'
+        #Act
+        actual = make_deposit(account_number, deposit_amount)
+        #Assert
+        self.assertEqual(actual, expected)
+    def test_make_deposit_invalid_account(self):
+        #Arrange
+        account_number = 112233
+        deposit_amount = 1500.01
+        expected = 'Account number does not exisit.'
+        #Act
+        #assert
+        with self.assertRaises(Exception) as context:
+                make_deposit(account_number, deposit_amount)
+        self.assertEqual(str(context.exception), expected)
+    
+    def test_make_deposit_invalid_amount(self):
+        #Arrange
+        account_number = 123456
+        deposit_amount = -50.01
+        expected = 'Invalid amount.amount must be positive.'
+        #Act
+        #assert
+        with self.assertRaises(ValueError) as context:
+                make_deposit(account_number, deposit_amount)
+        self.assertEqual(str(context.exception), expected)
+
 
         
 
