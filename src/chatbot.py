@@ -39,10 +39,6 @@ def get_account() -> int:
     if account_number not in ACCOUNTS:
         raise ValueError('Acount Number Does not Exsist.')
     return account_number #returns account number if it in ACCOUNTS.
-# try:
-#     bg = get_account()
-# except Exception as e:
-#     print(e)
 
 def get_amount() ->float:
     """
