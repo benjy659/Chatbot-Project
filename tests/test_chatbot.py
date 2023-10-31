@@ -6,7 +6,7 @@ Usage: The chatbot Alows users perform balance enquire andd make deposit to thie
 """
 import unittest
 from unittest.mock import patch
-from src.chatbot import get_account,VALID_TASKS,ACCOUNTS,get_amount,get_balance,make_deposit
+from src.chatbot import get_account,VALID_TASKS,ACCOUNTS,get_amount,get_balance,make_deposit,user_selection
 
 class chatbotTests(unittest.TestCase):
     def test_get_account_valid(self):
@@ -32,11 +32,11 @@ class chatbotTests(unittest.TestCase):
             #Act and Asssert
             #assertRaies(ValueError) <-- because function raises
             # ValueError when an invalid acount number is provided.
-            with self.assertRaises(ValueError) as context:
+            with self.assertRaises(Exception) as context:
                 get_account()
             self.assertEqual(str(context.exception), expected)
     
-    def test_get_account_invalid(self):
+    def test_get_account_does_not_exist(self):
         #builtins.input <-- allows us to mock input
         with patch('builtins.input') as mock_input:
         #Arrange
@@ -46,7 +46,7 @@ class chatbotTests(unittest.TestCase):
             #Act and Asssert
             #assertRaies(ValueError) <-- because function raises
             # ValueError when an invalid acount number is provided.
-            with self.assertRaises(Exception) as context:
+            with self.assertRaises(ValueError) as context:
                 get_account()
             self.assertEqual(str(context.exception), expected)
     
@@ -70,10 +70,10 @@ class chatbotTests(unittest.TestCase):
         #Arrange
         #the side_effect list below 'mocks' input for invalid amount.
             mock_input.side_effect = ['ab']
-            expected = 'invalid amount. amount must be numeric.'
+            expected = 'invalid amount. Amount must be numeric.'
             #Act and Asssert
             #assertRaies(ValueError) <-- because function raises
-            with self.assertRaises(ValueError) as context:
+            with self.assertRaises(Exception) as context:
                 get_amount()
             self.assertEqual(str(context.exception), expected)
 
@@ -86,7 +86,7 @@ class chatbotTests(unittest.TestCase):
             expected = 'Invalid amount. please enter a positive number.'
             #Act and Asssert
             #assertRaies(ValueError) <-- because function raises
-            with self.assertRaises(Exception) as context:
+            with self.assertRaises(ValueError) as context:
                 get_amount()
             self.assertEqual(str(context.exception), expected)
 
@@ -104,7 +104,7 @@ class chatbotTests(unittest.TestCase):
         account = 112233
         expected = 'Account number does not exist.'
         #Act and Assert
-        with self.assertRaises(Exception) as context:
+        with self.assertRaises(ValueError) as context:
             get_balance(account)
         self.assertEqual(str(context.exception), expected)
 
@@ -118,6 +118,7 @@ class chatbotTests(unittest.TestCase):
         actual = make_deposit(account_number, deposit_amount)
         #Assert
         self.assertEqual(ACCOUNTS[account_number]['balance'], expected)
+
     def test_make_deposit_correct_value_returned(self):
         #Arrange
         account_number = 123456
@@ -128,6 +129,7 @@ class chatbotTests(unittest.TestCase):
         actual = make_deposit(account_number, deposit_amount)
         #Assert
         self.assertEqual(actual, expected)
+
     def test_make_deposit_invalid_account(self):
         #Arrange
         account_number = 112233
@@ -149,6 +151,47 @@ class chatbotTests(unittest.TestCase):
         with self.assertRaises(ValueError) as context:
                 make_deposit(account_number, deposit_amount)
         self.assertEqual(str(context.exception), expected)
+    
+    def test_valid_user_selction_lower_case(self):
+        #builtins.input <-- allows us to mock input
+        with patch('builtins.input') as mock_input:
+        #Arrange
+        #the side_effect list below 'mocks' input 'balance' for a valid task.
+            mock_input.side_effect = ['balance']
+            expected = 'balance'
+            actual = user_selection()
+            #Act and  Asssert
+            self.assertEqual(actual, expected)
+
+    def test_valid_user_selction_upper_case(self):
+    #builtins.input <-- allows us to mock input
+        with patch('builtins.input') as mock_input:
+        #Arrange
+        #the side_effect list below 'mocks' input 'DEPOSIT' for a valid task.
+            mock_input.side_effect = ['DEPOSIT']
+            expected = 'deposit'
+            actual = user_selection()
+            #Act and  Asssert
+            self.assertEqual(actual, expected)
+
+    def test_invalid_user_selection(self):
+        #builtins.input <-- allows us to mock input
+        with patch('builtins.input') as mock_input:
+        #Arrange
+        #the side_effect list below 'mocks' input  'dposit' for Invalid tasks.
+            mock_input.side_effect = ['dposit']
+            expected = 'Invalid task. Please choose balance, deposit, or exit.'
+            #Act and Asssert
+            #assertRaies(ValueError) <-- because function raises
+            with self.assertRaises(ValueError) as context:
+                user_selection()
+            self.assertEqual(str(context.exception), expected)
+    
+
+
+        
+             
+        
 
 
         

@@ -31,16 +31,18 @@ def get_account() -> int:
         """
 
     #if  user_selction is valid.
-    valid = True
-    while valid:
-        try:
-            user_selection = input('Please enter your account number: ')
-            account_number = int(user_selection)
-            if account_number not in ACCOUNTS:
-                raise Exception('Acount Number Does not Exsist.')
-            return account_number #returns account number if it in ACCOUNTS.
-        except ValueError:
-            raise Exception('Account Number must be a whole number.')
+    try:
+        user_selection = input('Please enter your account number: ')
+        account_number = int(user_selection)
+    except Exception:
+        raise ValueError('Account Number must be a whole number.')
+    if account_number not in ACCOUNTS:
+        raise ValueError('Acount Number Does not Exsist.')
+    return account_number #returns account number if it in ACCOUNTS.
+# try:
+#     bg = get_account()
+# except Exception as e:
+#     print(e)
 
 def get_amount() ->float:
     """
@@ -52,15 +54,19 @@ def get_amount() ->float:
         valueError: if user_selection is not numeric. 
         Exception: if user_selection is zero or negative number.
         """
-    while True:
+    valid = True
+    while valid:
         try:
-            user_selection = (input('Enter transaction amount: '))
+            user_selection = input('Enter the transaction amount: ')
             amount = float(user_selection)
-            if amount <= 0:
-                raise Exception('Invalid amount. please enter a positive number.')
-            return amount
-        except ValueError:
-            raise ValueError('invalid amount. amount must be numeric.')
+        except Exception:
+            raise ValueError('invalid amount. Amount must be numeric.')
+        
+        if amount <= 0:
+            raise ValueError('Invalid amount. please enter a positive number.')
+        return amount
+    
+
 
         
 def get_balance(account: int) -> str:
@@ -71,13 +77,13 @@ def get_balance(account: int) -> str:
     return(str): returns a string message that includes account number and balance.
 
     raises:
-        Exception: 
+        Exception: if account number does not exisit.
     """
-    if account in ACCOUNTS:
-        balance = ACCOUNTS[account]['balance']
-        return f'Your current balance for account {account} is ${balance:.2f}.'
-    else:
-        raise Exception('Account number does not exist.')
+    if account not in ACCOUNTS:
+        raise ValueError('Account number does not exist.')
+    balance = ACCOUNTS[account]['balance']
+    return f'Your current balance for account {account} is ${balance:.2f}.'
+    
 
 
 def make_deposit(account: int, amount: float) -> str:
@@ -96,10 +102,29 @@ def make_deposit(account: int, amount: float) -> str:
          raise Exception('Account number does not exisit.')
      if amount <= 0:
         raise ValueError('Invalid amount.amount must be positive.')
+     
      balance = ACCOUNTS[account]['balance']
      account_balance = balance + amount
      ACCOUNTS[account]['balance'] = account_balance
      return f'You have made a deposit of ${amount:.2f} to account {account}.'
+
+def user_selection() -> str:
+     """
+    args(): no parameters.
+
+    return(): returns a user_selection if its in Valid_Task.
+
+    raises:
+        valueError: raises ValueError if selection is not in Valid_Tasks. 
+     """
+    
+     user_selection = input('what would you like to do (balance/deposit/exit)? ').lower()
+     if user_selection not in VALID_TASKS:
+         raise ValueError('Invalid task. Please choose balance, deposit, or exit.')   
+      
+     return user_selection
+
+           
      
 
 
@@ -114,78 +139,71 @@ def make_deposit(account: int, amount: float) -> str:
 
 ## GIVEN CHATBOT FUNCTION
 ## REQUIRES REVISION
-"""
+
 def chatbot():
-'''
-The main program.  Uses the functionality of the functions:
-get_account()
-get_amount()
-get_balance()
-make_deposit()
-user_selection()
-'''
+    '''
+    The main program.  Uses the functionality of the functions:
+    get_account()
+    get_amount()
+    get_balance()
+    make_deposit()
+    user_selection()
+    '''
 
-print("Welcome! I'm the PiXELL River Financial Chatbot!  Let's get chatting!")
+    print("Welcome! I'm the PiXELL River Financial Chatbot!  Let's get chatting!")
 
-keep_going = True
-while keep_going:
-try:
-    ## CALL THE user_selection FUNCTION HERE 
-    ## CAPTURING THE RESULTS IN A VARIABLE CALLED
-    ## selection:
+    keep_going = True
+    while keep_going:
+        try:
+            ## CALL THE user_selection FUNCTION HERE
+            ## CAPTURING THE RESULTS IN A VARIABLE CALLED
+            ## selection:
+            selection = user_selection()
+            if selection != "exit":
+                # Account number validation.
+                valid_account = False
+                while valid_account == False:
+                    try:
+                        ## CALL THE get_account FUNCTION HERE
+                        ## CAPTURING THE RESULTS IN A VARIABLE 
+                        ## CALLED account:
+                        account = get_account()
+                        valid_account = True
+                    except Exception as e:
+                        # Invalid account.
+                        print(e)
+                if selection == "balance":
+                        ## CALL THE get_balance FUNCTION HERE
+                        ## PASSING THE account VARIABLE DEFINED 
+                        ## ABOVE, AND PRINT THE RESULTS:
+                        balance = get_balance(account)
+                        print(balance)
+                else:
+                    # Amount validation.
+                    valid_amount = False
+                    while valid_amount == False:
+                        try:
+                            ## CALL THE get_amount FUNCTION HERE
+                            ## AND CAPTURE THE RESULTS IN A VARIABLE 
+                            ## CALLED amount:
+                            amount = get_amount()
+                            valid_amount = True
+                        except Exception as e:
+                            # Invalid amount.
+                            print(e)
+                    ## CALL THE make_deposit FUNCTION HERE PASSING TH
+                    ## VARIABLES account AND amount DEFINED ABOVE AND 
+                    ## PRINT THE RESULTS:
+                    result = make_deposit(account, amount)
+                    print(result)
+            else:
+                # User selected 'exit'
+                keep_going = False
+        except Exception as e:
+            # Invalid selection:
+            print(e)
 
+    print("Thank you for banking with PiXELL River Financial.")
 
-    if selection != "exit":
-        
-        # Account number validation.
-        valid_account = False
-        while valid_account == False:
-            try:
-                ## CALL THE get_account FUNCTION HERE
-                ## CAPTURING THE RESULTS IN A VARIABLE 
-                ## CALLED account:
-
-
-                valid_account = True
-            except Exception as e:
-                # Invalid account.
-                print(e)
-        if selection == "balance":
-                ## CALL THE get_balance FUNCTION HERE
-                ## PASSING THE account VARIABLE DEFINED 
-                ## ABOVE, AND PRINT THE RESULTS:
-
-        else:
-
-            # Amount validation.
-            valid_amount = False
-            while valid_amount == False:
-                try:
-                    ## CALL THE get_amount FUNCTION HERE
-                    ## AND CAPTURE THE RESULTS IN A VARIABLE 
-                    ## CALLED amount:
-
-
-                    valid_amount = True
-                except Exception as e:
-                    # Invalid amount.
-                    print(e)
-            ## CALL THE make_deposit FUNCTION HERE PASSING THE 
-            ## VARIABLES account AND amount DEFINED ABOVE AND 
-            ## PRINT THE RESULTS:
-
-
-    else:
-        # User selected 'exit'
-        keep_going = False
-except Exception as e:
-    # Invalid selection:
-    print(e)
-
-print("Thank you for banking with PiXELL River Financial.")
-"""
-
-"""
 if __name__ == "__main__":
-chatbot()
-"""
+    chatbot()
